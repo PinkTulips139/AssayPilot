@@ -1,5 +1,15 @@
 # AssayPilot: Auditable Policy Evaluation for Phenotype Discovery
 
+Auditable evaluation of budget-constrained sequential phenotype discovery.
+
+### ▶ Live Demo
+
+**[Launch AssayPilot Evidence Replay →](https://pinktulips139.github.io/AssayPilot/)**
+
+Interactive replay of frozen selection traces and saved confirmation evidence. No model execution or external API is required.
+
+[Technical Report](REPORT/ASSAYPILOT_TECHNICAL_REPORT.md) · [Reproducibility](reproducibility/README.md) · [Rights & Data](RIGHTS_NOTICE.md)
+
 **Frozen confirmation changed the policy-selection conclusion.** AssayPilot evaluates budget-constrained phenotype-discovery policies with frozen protocols, auditable selection traces, identity-aware confirmation and explicit claim boundaries.
 
 | Coverage-only | Development | T1 confirmation | T2 confirmation |
@@ -7,9 +17,9 @@
 | Mean Coverage-AUC | 0.91806 | 0.69018 | 0.88917 |
 | Rank among the same five policies | 1 | 4 | 4 |
 
-![Development-to-confirmation ranking reversal](figures/figure_3.png)
+[![Development-to-confirmation ranking reversal](figures/figure_3.png)](https://pinktulips139.github.io/AssayPilot/)
 
-[Technical report](REPORT/ASSAYPILOT_TECHNICAL_REPORT.html) · [Evidence replay](demo/index.html) · [Confirmation results](tables/table_2.md) · [Reproduction](reproducibility/README.md)
+[Confirmation results](tables/table_2.md) · [Rendered report HTML](REPORT/ASSAYPILOT_TECHNICAL_REPORT.html)
 
 ## What this project contributes
 
