@@ -34,7 +34,7 @@ The supported scope is one study, a previously seen batch environment, registere
 
 ## Local evidence replay
 
-Clone or download this repository, then open `demo/index.html` in a browser. This is a static saved-evidence replay, not a hosted web app. It does not execute a selector and requires no external API.
+Open the [live evidence replay](https://pinktulips139.github.io/AssayPilot/) in a browser. For offline use, clone or download this repository, then open `demo/index.html`. Both versions replay saved evidence; neither executes a selector or requires an external API.
 
 ## Reproduce figures, tables and report
 
