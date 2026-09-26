@@ -1,0 +1,26 @@
+{
+  "inputs": [
+    {
+      "path": "results/development/comparison_aggregate.csv",
+      "sha256": "4630749793fc80aec75305020ad2e0028847cab417dbea54d4abd795b42e7c0a"
+    },
+    {
+      "path": "results/confirmation/summary_metrics.csv",
+      "sha256": "ad208431bedd7c74df5a4e7f6049fca3016c92c9c32ce3b01cb628bc31791bff"
+    },
+    {
+      "path": "results/confirmation/summary_by_seed.csv",
+      "sha256": "0d8aad5c60defa0e481c2b3cc5587bab9de0b5761e157ceff7c4b717b877a22a"
+    },
+    {
+      "path": "results/confirmation/bootstrap_ci.csv",
+      "sha256": "f67ed031058e647c0eea2ff39da8e9520573fc4cc0501fda04066bfdf4f3200b"
+    },
+    {
+      "path": "results/audit/adjudication.json",
+      "sha256": "02baae0d8055592b5f1ac561a5352b3199c17dbdd61513265677721ae0b67fdc"
+    }
+  ],
+  "policy_or_metric_recomputed": false,
+  "derived": "Table5 count means only, from existing per-seed counters; no policy execution"
+}

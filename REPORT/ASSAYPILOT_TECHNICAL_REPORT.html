@@ -1,0 +1,520 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><title>AssayPilot Technical Report</title><style>body{max-width:1080px;margin:40px auto;padding:0 24px;font:17px/1.65 Georgia,serif;color:#162b3b}h1,h2{font-family:system-ui;line-height:1.2}h2{margin-top:2em}img{width:100%;height:auto}table{border-collapse:collapse;width:100%;font:12px/1.4 system-ui;display:block;overflow-x:auto}td,th{padding:7px;border-bottom:1px solid #ccd3d8;text-align:left}th{background:#edf2f4}code{font-size:.8em;overflow-wrap:anywhere}a{color:#146785}@media print{body{margin:0;font-size:11pt}h2{break-after:avoid}img{break-inside:avoid}}</style><body><h1 id="assaypilot-auditable-policy-evaluation-for-phenotype-discovery">AssayPilot: Auditable Policy Evaluation for Phenotype Discovery</h1>
+<p>Author: Lekang Sun (孙乐康)<br />
+Affiliation: Beijing University of Technology (北京工业大学)<br />
+Team: one member; leader and member Lekang Sun.<br />
+Affiliation identifies the author's school and does not imply institutional endorsement or ownership.</p>
+<p>Technical Report | 19 September 2026</p>
+<p><strong>Status:</strong> evaluation-framework contribution; no claim of a superior new selector. This document reports completed experiments; preparing this public competition snapshot did not run new experiments.</p>
+<h2 id="1-abstract">1. Abstract</h2>
+<p>Selecting experiments under a limited budget requires both a useful policy and credible evidence about that policy. Development scores alone can be misleading when a scientific decision system is selected and assessed on the same development setting. AssayPilot provides an auditable offline framework for budget-constrained sequential phenotype discovery, connecting saved selection histories, frozen preprocessing and reference definitions, identity audits, paired comparisons and claim-level adjudication. In the studied Cell Painting setting, coverage-only ranked first among five common policies during development with mean Coverage-AUC 0.91806. Under a frozen confirmation protocol, it ranked fourth in both fixed campaigns: 0.69018 in T1 and 0.88917 in T2. Diversity-only led T1 (0.85625), while Uncertainty-only led T2 (0.92750). All 200 planned confirmation runs completed. Paired mean differences against Uncertainty-only were negative in both campaigns, with saved bootstrap intervals excluding zero. These findings changed the policy-selection conclusion without changing the primary endpoint or discarding negative results. The contribution is a reproducible evaluation workflow and a bounded empirical demonstration of development-to-confirmation ranking instability, not a universally better experimental selector. Confirmation concerns registered entities and physical plates withheld from development within one study and a previously seen batch environment.</p>
+<h2 id="2-introduction">2. Introduction</h2>
+<p>An experimental-selection policy allocates limited observations to potentially informative conditions. A high development score is useful for selecting a candidate, but is not independent evidence that the selected policy will retain its advantage. This distinction matters when investigators can repeatedly inspect a small scientific dataset, propose additional objectives, and compare many policy variants. AssayPilot makes the transition from development to confirmation explicit, including the possibility that confirmation reverses the conclusion.</p>
+<p>The present work has three contributions. First, an inspectable budgeted simulator separates policy-visible information from hidden evaluation outcomes and records a receipt for each trajectory. Second, a frozen confirmation process separates registered-entity, physical-plate, batch and study claims instead of treating any non-overlapping identifier as proof of generalization. Third, a documented comparison retains unsuccessful multi-objective variants and a development winner that failed confirmation. The integrated evidence chain is the contribution; its components are not claimed to be individually novel algorithms, and this report does not establish priority over all existing benchmark systems.</p>
+<h2 id="3-scientific-motivation">3. Scientific motivation</h2>
+<p>Cell Painting measurements characterize cellular morphology through many phenotype features. Investigators interested in diverse, reproducible phenotypic responses must choose which conditions warrant additional measurement. This task differs from maximizing one classification score: redundant selections can consume a budget, measurement agreement can vary, and laboratory context can affect observed profiles.</p>
+<p>Our simulation studies selection for confirmation after an initial screening resource is available. It does not assume unmeasured candidate phenotypes can be observed for free: each campaign accounts for a 300-condition screening pool and a fixed reference cost of 96 alongside the confirmation budget. The framework offers a way to examine policy choices under these recorded assumptions. It has not demonstrated savings in a prospective wet-lab deployment, drug efficacy, or clinical benefit.</p>
+<h2 id="4-problem-formulation">4. Problem formulation</h2>
+<p>Each fixed campaign contains 50 registered compounds and 300 conditions. The policy receives its allowed screening descriptors and observed confirmation history. An action selects a condition for the next confirmation query, subject to a cap of two doses per compound. Twelve initial conditions are followed by twelve rounds of four queries, yielding 60 confirmation queries. The final accounted online cost is 300 + 96 + 60 = 456. Hidden evaluation measurements are inaccessible to the selector and are evaluated after trajectories are sealed.</p>
+<p>The frozen primary endpoint is the trapezoidal integral of coverage over confirmation budgets 12 through 60, divided by 48. Coverage is the fraction of available hidden-evaluation regions represented by selected conditions. The campaign-specific denominator means that absolute scores across Development, T1 and T2 are not interchangeable estimates of one population parameter. The principal comparison is the policy ranking within each campaign.</p>
+<p>Secondary endpoints retain their frozen definitions: final coverage; discovery efficiency, (regions at 60 minus regions at 12)/48; entropy of supported hidden regions divided by log(8) for diversity; hidden repeat confirmation among online-positive selections for repeatability; and the saved cross-batch agreement/cosine diagnostics. Undefined denominators stay NA. These endpoints are not recombined into a new aggregate objective.</p>
+<h2 id="5-dataset-and-compliance-boundary">5. Dataset and compliance boundary</h2>
+<p>The source is the publicly documented LINCS Cell Painting resource [1]. The local project separates phenotype evidence from restricted or unresolved annotation rights. This report uses existing approved phenotype-derived results, registered identifiers, plate/batch metadata and provenance. Chemical structure, fingerprints, mechanism of action and target annotations are not used to establish chemical independence or to improve a policy.</p>
+<p>The public snapshot contains result summaries, replay data, frozen parameter artifacts and source code for review. It does not contain raw augmented profiles, microscopy images or new candidate data. A copy of the phenotype CC0 reference is provided [2]; it is not a blanket license for every compound annotation or every derived asset. User-original project code is distributed in this competition snapshot without an additional open-source license; see the <a href="../RIGHTS_NOTICE.md">Rights Notice</a>. Third-party software and data retain their original ownership, licenses and usage conditions. Experimental metadata and derived-result lineage are documented, and restricted annotations and raw phenotype archives are excluded.</p>
+<h2 id="6-evaluation-framework">6. Evaluation framework</h2>
+<p>The framework connects five separable stages: permitted observations, budgeted policy actions, sealed selection receipts, hidden-outcome scoring, and scientific adjudication. The simulator enforces query limits and records selected conditions round by round. The frozen transform handles missing values, normalization and a ten-dimensional PCA representation without refitting on confirmation data. Its saved feature contract has 1,629 columns and its reference has eight regions. Exact executable definitions are retained in the archived source and configuration [3].</p>
+<p><img alt="Figure 1" src="../figures/figure_1.png" /></p>
+<p>Figure 1. Offline budgeted evaluation, not automated wet-lab execution. All 300 screening observations are paid inputs. Twelve initial confirmations plus twelve rounds of four queries give 60 confirmations; 96 reference-control costs are recorded separately. Unpurchased confirmation and independent H remain outside the policy view. All trajectories are sealed before hidden evaluation. The framework can reject the development-selected policy claim.</p>
+<p>The packaging layer is separate from this simulator. Figures and the browser demo read completed results and never query an evaluator or execute a selector. In the demo, hidden-outcome curves are shown only as post-seal replay, not as a signal that the original policy could inspect during selection. Receipts, manifests and artifact hashes link the displayed results back to the evidence files.</p>
+<h2 id="7-policies-and-baselines">7. Policies and baselines</h2>
+<p>The formal comparison contains Random, Greedy, Uncertainty-only, Diversity-only and coverage-only. Random supplies a budget-matched reference. Greedy uses the existing screening-strength rule; Uncertainty-only uses the frozen neighbor-based uncertainty rule; Diversity-only selects according to the existing distance-based diversity criterion. Coverage-only is the archived AblationQACS implementation with variant QACS-coverage-only and weights (1, 0, 0, 0). The historical class name is retained for reproducibility and is not a claim that QACS was successful.</p>
+<p>All five methods use the same campaign, seed policy, budgets, preprocessing, reference and evaluator. The archived source is authoritative for tie handling and numerical details; this packaging did not alter it. Multi-objective QACS variants, constrained and lexicographic successors belong to development evidence, not to the five-method formal confirmation. No selector was trained or retuned for this report.</p>
+<h2 id="8-development-evaluation">8. Development evaluation</h2>
+<p>Development was used to choose the candidate and is therefore selection evidence, not independent validation. Among the five methods subsequently compared in confirmation, coverage-only ranked first, with mean Coverage-AUC 0.91806. Table 1 and Figure 2 retain the original means and sample standard deviations and show the additional development variants as context. They are not pooled with confirmation observations.</p>
+<p><strong>Table 1. Development-only means and sample seed SD (20 seeds); additional QACS rows are exploratory, not confirmation.</strong></p>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>AUC</th>
+<th>Seed_SD</th>
+<th>Seeds</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Random</td>
+<td>0.40521</td>
+<td>0.19047</td>
+<td>20</td>
+</tr>
+<tr>
+<td>Greedy</td>
+<td>0.87708</td>
+<td>0.06244</td>
+<td>20</td>
+</tr>
+<tr>
+<td>Uncertainty-only</td>
+<td>0.89583</td>
+<td>0.02137</td>
+<td>20</td>
+</tr>
+<tr>
+<td>Diversity-only</td>
+<td>0.88403</td>
+<td>0.06146</td>
+<td>20</td>
+</tr>
+<tr>
+<td>Coverage-only</td>
+<td>0.91806</td>
+<td>0.05947</td>
+<td>20</td>
+</tr>
+<tr>
+<td>QACS-full</td>
+<td>0.87917</td>
+<td>0.06176</td>
+<td>20</td>
+</tr>
+<tr>
+<td>QACS-no-repeatability</td>
+<td>0.86181</td>
+<td>0.05914</td>
+<td>20</td>
+</tr>
+<tr>
+<td>QACS-no-batch</td>
+<td>0.90625</td>
+<td>0.05989</td>
+<td>20</td>
+</tr>
+</tbody>
+</table>
+<p><img alt="Figure 2" src="../figures/figure_2.png" /></p>
+<p>Figure 2. Development-only mean Coverage-AUC, with seed standard deviations (not confidence intervals). Coverage-only leads at 0.91806. QACS-full and two single-term ablations are exploratory development evidence, not confirmation runs. The later constrained and lexicographic variants remain in the negative-results supplement.</p>
+<p>Phase15 did not support the multi-objective QACS formulation. Its weighted-sum and principled-successor experiments are retained in the negative-results artifacts [4]. The appropriate inference is that the tested proxies did not establish a stable advantage in this evidence, not that every multi-objective approach is ineffective. The development superiority of coverage-only justified freezing a candidate, but did not justify calling it confirmed.</p>
+<h2 id="9-frozen-confirmation-design">9. Frozen confirmation design</h2>
+<p>The formal method fingerprint is <code>009d78b97ac2d1d47986fd13e3f5592c01c8e0b0e09ab9063d20cfe6a364bda7</code>. The split-manifest hash is <code>52e61d9c7136907226776cfe69895004890234916f5617492c71a4010392b45a</code>. Frozen method, preprocessing, reference, metric definitions, seeds and costs are documented in the saved manifests [3,5]. Both campaigns used seeds 0 through 19 for each of five methods: 2 x 5 x 20 = 200 planned runs.</p>
+<p>The initial Phase16 review stopped before performance evaluation because independence evidence was incomplete. Phase16A subsequently authorized claim-scoped confirmation after its identity audit. Confirmation vectors had been accessed for identity/hash/near-duplicate auditing; claiming the phenotype files had never been opened would be false. The relevant separation was that policy performance, reward and coverage had not been calculated or used for policy choice before the formal confirmation.</p>
+<p>The formal confirmation then completed 200 runs with zero failures. Preflight and receipt/statistics verification records are retained. Technical attempt records remain archived and are not erased by the final successful status. The outcome is C — COVERAGE_ONLY_NOT_CONFIRMED, now based on actual performance evidence. T1/T2 are performance-exposed and cannot independently confirm a later method informed by these outcomes.</p>
+<h2 id="10-independence-audit">10. Independence audit</h2>
+<p>The Phase16A audit found registered compound, sample, condition, measurement and replicate ancestry isolated between Development and each fixed campaign. Physical plates used for T1/T2 were not used for Development. However, T1 and T2 share eight physical plates and both inhabit the previously exposed batch2 environment. Chemical/scaffold equivalence is unknown; external-study evidence is absent. Shared batch context is not automatically identity leakage, but it prevents an unseen-batch claim.</p>
+<p><strong>Table 4. Operational independence claims inherited from Phase16A; shared context is not automatically record leakage.</strong></p>
+<table>
+<thead>
+<tr>
+<th>Identity level</th>
+<th>Development vs T1</th>
+<th>Development vs T2</th>
+<th>T1 vs T2</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Record / measurement</td>
+<td>PASS</td>
+<td>PASS</td>
+<td>PASS</td>
+</tr>
+<tr>
+<td>Registered entity</td>
+<td>PASS</td>
+<td>PASS</td>
+<td>PASS</td>
+</tr>
+<tr>
+<td>Physical plate</td>
+<td>PASS</td>
+<td>PASS</td>
+<td>FAIL</td>
+</tr>
+<tr>
+<td>Unseen batch</td>
+<td>FAIL</td>
+<td>FAIL</td>
+<td>FAIL</td>
+</tr>
+<tr>
+<td>External study</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>Chemical / scaffold</td>
+<td>UNKNOWN</td>
+<td>UNKNOWN</td>
+<td>UNKNOWN</td>
+</tr>
+</tbody>
+</table>
+<p><img alt="Figure 6" src="../figures/figure_6.png" /></p>
+<p>Figure 6. Identity and claim hierarchy inherited from Phase16A. Each confirmation campaign uses registered entities and physical plates absent from development, but T1 and T2 share eight physical plates and all use a previously seen batch environment. Chemical/scaffold independence is unknown. External-study validation is not part of this design (N/A). PASS concerns the stated operational level only.</p>
+<p>The matrix reports evidence for each distinct claim. PASS does not mean molecularly novel compounds. FAIL in the shared-batch or T1-versus-T2 plate cells denotes failure of that stronger isolation claim, not proof of identical records. The defensible confirmation scope is same-study, seen-batch, unseen registered entities and physical plates withheld from development.</p>
+<h2 id="11-confirmation-results">11. Confirmation results</h2>
+<p>Table 2 reports the primary endpoint with mean, median, sample standard deviation, valid seeds and failure/NA accounting. Each campaign is analyzed separately; the two campaigns are not treated as forty independent biological replicates.</p>
+<p><strong>Table 2. Primary Coverage-AUC by fixed campaign and policy; sample SD uses ddof=1; valid/failed/NA seeds are explicit.</strong></p>
+<table>
+<thead>
+<tr>
+<th>campaign</th>
+<th>method</th>
+<th>mean</th>
+<th>median</th>
+<th>std</th>
+<th>valid_seeds</th>
+<th>failed_seeds</th>
+<th>na_seeds</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>T1</td>
+<td>coverage-only</td>
+<td>0.69018</td>
+<td>0.67857</td>
+<td>0.05635</td>
+<td>20</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>T1</td>
+<td>diversity</td>
+<td>0.85625</td>
+<td>0.85119</td>
+<td>0.03358</td>
+<td>20</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>T1</td>
+<td>greedy</td>
+<td>0.81518</td>
+<td>0.80060</td>
+<td>0.03320</td>
+<td>20</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>T1</td>
+<td>random</td>
+<td>0.37768</td>
+<td>0.35119</td>
+<td>0.13959</td>
+<td>20</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>T1</td>
+<td>uncertainty</td>
+<td>0.80804</td>
+<td>0.80655</td>
+<td>0.04119</td>
+<td>20</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>T2</td>
+<td>coverage-only</td>
+<td>0.88917</td>
+<td>0.92917</td>
+<td>0.08520</td>
+<td>20</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>T2</td>
+<td>diversity</td>
+<td>0.92083</td>
+<td>0.92500</td>
+<td>0.02683</td>
+<td>20</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>T2</td>
+<td>greedy</td>
+<td>0.91667</td>
+<td>0.91667</td>
+<td>0.02041</td>
+<td>20</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>T2</td>
+<td>random</td>
+<td>0.38667</td>
+<td>0.37083</td>
+<td>0.16718</td>
+<td>20</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>T2</td>
+<td>uncertainty</td>
+<td>0.92750</td>
+<td>0.93333</td>
+<td>0.01712</td>
+<td>20</td>
+<td>0</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<p>Coverage-only obtained 0.69018 in T1 and 0.88917 in T2. Diversity-only led T1 at 0.85625; Uncertainty-only led T2 at 0.92750. Coverage-only was fourth in both five-method rankings. Its confirmation superiority was not reproduced.</p>
+<p>Table 3 and Figure 4 use the saved paired differences and original bootstrap estimates, without recomputing a bootstrap in packaging. The original plan resampled twenty within-campaign seed pairs 10,000 times using RNG seed 1600 and percentile 2.5/97.5 bounds for their mean difference. These intervals describe initial-selection-seed uncertainty conditional on fixed entities and plates. They are not population, biological or cross-batch confidence intervals.</p>
+<p><strong>Table 3. Coverage-only minus comparator, paired by seed within each campaign; percentile bootstrap intervals are conditional on fixed entities and plates.</strong></p>
+<table>
+<thead>
+<tr>
+<th>campaign</th>
+<th>comparator</th>
+<th>valid_pairs</th>
+<th>planned_pairs</th>
+<th>mean</th>
+<th>median</th>
+<th>std</th>
+<th>ci_low</th>
+<th>ci_high</th>
+<th>wins</th>
+<th>ties</th>
+<th>losses</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>T1</td>
+<td>uncertainty</td>
+<td>20</td>
+<td>20</td>
+<td>-0.11786</td>
+<td>-0.12798</td>
+<td>0.05869</td>
+<td>-0.14167</td>
+<td>-0.09256</td>
+<td>1</td>
+<td>0</td>
+<td>19</td>
+</tr>
+<tr>
+<td>T1</td>
+<td>diversity</td>
+<td>20</td>
+<td>20</td>
+<td>-0.16607</td>
+<td>-0.16369</td>
+<td>0.04309</td>
+<td>-0.18482</td>
+<td>-0.14821</td>
+<td>0</td>
+<td>0</td>
+<td>20</td>
+</tr>
+<tr>
+<td>T2</td>
+<td>uncertainty</td>
+<td>20</td>
+<td>20</td>
+<td>-0.03833</td>
+<td>0.01667</td>
+<td>0.08269</td>
+<td>-0.07417</td>
+<td>-0.00333</td>
+<td>12</td>
+<td>2</td>
+<td>6</td>
+</tr>
+<tr>
+<td>T2</td>
+<td>diversity</td>
+<td>20</td>
+<td>20</td>
+<td>-0.03167</td>
+<td>0.01667</td>
+<td>0.08527</td>
+<td>-0.06834</td>
+<td>0.00250</td>
+<td>11</td>
+<td>2</td>
+<td>7</td>
+</tr>
+</tbody>
+</table>
+<p><img alt="Figure 4" src="../figures/figure_4.png" /></p>
+<p>Figure 4. Coverage-only minus each strong comparator, paired by seed. Points are the 20 saved differences; diamonds and bars are the saved paired means and percentile bootstrap 95% intervals (10,000 resamples, RNG seed 1600). Intervals describe initial-seed uncertainty conditional on fixed entities and plates, not population or biological uncertainty. The T2 versus Diversity interval includes zero.</p>
+<p>Coverage-only minus Uncertainty-only was -0.11786 in T1 (95% CI [-0.14167, -0.09256]) and -0.03833 in T2 ([-0.07417, -0.00333]). Against Diversity-only the differences were -0.16607 ([-0.18482, -0.14821]) and -0.03167 ([-0.06834, +0.00250]). The last interval includes zero and must not be reported as a clear negative effect across the conditional seed distribution. The mean-ranking failure nevertheless holds in both campaigns. A majority of seed-level wins in a comparator pair, where present, is not the frozen mean-AUC adjudication criterion.</p>
+<h2 id="12-development-to-confirmation-ranking-instability">12. Development-to-confirmation ranking instability</h2>
+<p><img alt="Figure 3" src="../figures/figure_3.png" /></p>
+<p>Figure 3. The same five policies across development and the two frozen confirmation campaigns. Coverage-only changes from rank 1 to rank 4 in both T1 and T2. Diversity-only leads T1 and Uncertainty-only leads T2. Lines connect dataset summaries, not longitudinal observations. AUC uses its full 0-1 scale. The campaigns share plates and a previously seen batch environment.</p>
+<p>Coverage-only moved from rank 1 in Development to rank 4 in T1 and rank 4 in T2. The leading policy also differed between the two confirmation campaigns. This is a concrete case in which development-only policy selection would have supported a stronger conclusion than fixed confirmation permits.</p>
+<p>The figure shows full-range AUC and a separate ordinal ranking panel. Lines connect evaluation settings, not time points or independent biological replications. The ranking change cannot isolate one causal explanation: candidate composition, coverage geometry, measurement variation and other setting differences may contribute. No post-outcome algorithm search was performed here. The result does not prove that coverage objectives generally fail or that Diversity-only or Uncertainty-only is universally optimal.</p>
+<h2 id="13-secondary-metric-trade-offs">13. Secondary-metric trade-offs</h2>
+<p><strong>Table 5. Final secondary means over 20 seeds and positive-selection denominator counts; batch diagnostics do not establish unseen-batch generalization.</strong></p>
+<table>
+<thead>
+<tr>
+<th>Campaign</th>
+<th>Method</th>
+<th>Final_Coverage</th>
+<th>Diversity</th>
+<th>Repeatability</th>
+<th>Batch_agreement</th>
+<th>Batch_cosine</th>
+<th>Online_positive_mean</th>
+<th>Repeated_positive_mean</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>T1</td>
+<td>Random</td>
+<td>0.54286</td>
+<td>0.56716</td>
+<td>0.93315</td>
+<td>0.12000</td>
+<td>0.51374</td>
+<td>7.45000</td>
+<td>6.85000</td>
+</tr>
+<tr>
+<td>T1</td>
+<td>Greedy</td>
+<td>1.00000</td>
+<td>0.83424</td>
+<td>0.92200</td>
+<td>0.36750</td>
+<td>0.76501</td>
+<td>22.30000</td>
+<td>20.55000</td>
+</tr>
+<tr>
+<td>T1</td>
+<td>Uncertainty-only</td>
+<td>0.98571</td>
+<td>0.85614</td>
+<td>0.96118</td>
+<td>0.34917</td>
+<td>0.70793</td>
+<td>20.25000</td>
+<td>19.45000</td>
+</tr>
+<tr>
+<td>T1</td>
+<td>Diversity-only</td>
+<td>1.00000</td>
+<td>0.86934</td>
+<td>0.90929</td>
+<td>0.33417</td>
+<td>0.71384</td>
+<td>21.45000</td>
+<td>19.50000</td>
+</tr>
+<tr>
+<td>T1</td>
+<td>Coverage-only</td>
+<td>0.77143</td>
+<td>0.70991</td>
+<td>0.98504</td>
+<td>0.24250</td>
+<td>0.50184</td>
+<td>14.65000</td>
+<td>14.45000</td>
+</tr>
+<tr>
+<td>T2</td>
+<td>Random</td>
+<td>0.54000</td>
+<td>0.42910</td>
+<td>0.81518</td>
+<td>0.08750</td>
+<td>0.51804</td>
+<td>5.80000</td>
+<td>4.65000</td>
+</tr>
+<tr>
+<td>T2</td>
+<td>Greedy</td>
+<td>1.00000</td>
+<td>0.72683</td>
+<td>0.71708</td>
+<td>0.25917</td>
+<td>0.71064</td>
+<td>17.50000</td>
+<td>12.55000</td>
+</tr>
+<tr>
+<td>T2</td>
+<td>Uncertainty-only</td>
+<td>1.00000</td>
+<td>0.72566</td>
+<td>0.71708</td>
+<td>0.25833</td>
+<td>0.65606</td>
+<td>17.50000</td>
+<td>12.55000</td>
+</tr>
+<tr>
+<td>T2</td>
+<td>Diversity-only</td>
+<td>1.00000</td>
+<td>0.66885</td>
+<td>0.73967</td>
+<td>0.23417</td>
+<td>0.69125</td>
+<td>16.15000</td>
+<td>11.95000</td>
+</tr>
+<tr>
+<td>T2</td>
+<td>Coverage-only</td>
+<td>0.94000</td>
+<td>0.70008</td>
+<td>0.97946</td>
+<td>0.12667</td>
+<td>0.30801</td>
+<td>7.65000</td>
+<td>7.50000</td>
+</tr>
+</tbody>
+</table>
+<p><img alt="Figure 5" src="../figures/figure_5.png" /></p>
+<p>Figure 5. Separate constructs, not a composite score. Saved means over 20 seeds per campaign show higher conditional Repeatability for coverage-only, alongside lower final coverage and weaker external-batch agreement/cosine than strong baselines. Repeatability conditions on online-positive selections; its denominators are included in Table 5. Secondary outcomes do not replace Coverage-AUC.</p>
+<p>Coverage-only retained high conditional repeatability. In T1 it was 0.98504, compared with 0.96118 for Uncertainty-only and 0.90929 for Diversity-only; in T2 it was 0.97946, compared with 0.71708 and the Diversity-only value in Table 5. This ratio conditions on online-positive selections. It must be read together with its denominator: mean online-positive counts for coverage-only were 14.65 and 7.65 in T1/T2, versus 20.25 and 17.50 for Uncertainty-only. Mean repeat-confirmed counts were correspondingly 14.45 and 7.50 versus 19.45 and 12.55. A higher conditional fraction does not establish a larger number of confirmed discoveries.</p>
+<p>Final coverage was also lower for coverage-only: 0.77143 in T1 and 0.94000 in T2, versus 0.98571 and 1.00000 for Uncertainty-only. Saved batch agreement and cosine diagnostics were lower than those of the key baselines in both campaigns. These diagnostics compare the original batch2 online pair mean against a batch1 single profile; they are auxiliary cross-context measurements, not a new unseen-batch policy confirmation. Discovery efficiency and all secondary mean/median/sample-SD/NA fields are preserved in the <a href="../tables/supplement_full_metrics.md">supplementary full-metrics table</a>.</p>
+<p>The observed trade-off is scientifically relevant but cannot replace Coverage-AUC after results are known. Neither a local repeatability benefit nor strong development evidence changes the formal confirmation adjudication.</p>
+<h2 id="14-scientific-implications">14. Scientific implications</h2>
+<p>AssayPilot illustrates how evaluation design can change the research decision even when it does not produce a winning algorithm. Freezing the candidate, auditing what is independent, pairing stochastic initializations and retaining unsuccessful approaches protect against a development-only narrative. The reproducible output is the chain of decisions and evidence, including its negative endpoint.</p>
+<p>The result supports a methodological practice in this setting: distinguish policy selection from confirmation and make the level of independence explicit. It is an empirical demonstration, not a theorem about adaptive experimentation. The report's AI-for-science relevance comes from evaluating resource-constrained scientific decisions with auditable evidence. Algorithmic novelty, external validation and prospective impact remain limited; this report does not establish top-three competition competitiveness.</p>
+<h2 id="15-limitations">15. Limitations</h2>
+<p>Only one study and a previously seen batch environment are represented. T1/T2 share physical plates and are not independent biological plate replications. Registered-entity isolation does not establish chemical structure or scaffold isolation. The available confirmation entities and the fixed reference define the evaluated regimes; bootstrap uncertainty does not represent new studies, new batches or the population of molecules. Campaign-specific coverage denominators limit direct interpretation of absolute AUC changes across settings.</p>
+<p>This is a retrospective offline simulation, including assumptions about screen availability, experimental costs and phenotype-region definitions. It does not establish real wet-lab benefit, drug discovery efficacy or clinical utility. No systematic external novelty review or formal theoretical guarantee is claimed. Later work using T1/T2 to design a policy would require new untouched evaluation evidence. This report is included in the minimal competition submission snapshot under the repository's Rights Notice.</p>
+<h2 id="16-reproducibility">16. Reproducibility</h2>
+<p>The public snapshot contains saved results, paired statistics, demo replay data, archived policy source, frozen configurations, a file hash index, per-figure source records and a claim-evidence matrix. The reproduction path is figure-only/report-only: no raw data, scientific runners, selector execution or model training is needed. <code>python reproducibility/render_saved_results.py</code> rebuilds figures and tables; <code>python reproducibility/render_report.py</code> rebuilds HTML; <code>python reproducibility/verify_saved_artifacts.py</code> checks copied evidence hashes. See the environment records and reproducibility README [7].</p>
+<p>A full experiment reproduction is a separate, data-dependent operation and is outside this minimal snapshot. The supplied commands do not imply an executed full rerun. Early-round undefined values in the demo are displayed as NA rather than silently converted to zero. Authoritative negative-result tables are retained.</p>
+<h2 id="17-conclusion">17. Conclusion</h2>
+<p>Frozen confirmation changed the policy-selection conclusion: coverage-only's development lead was not retained on either fixed campaign. AssayPilot packages this bounded finding in an auditable workflow linking sequential decisions, identity-aware confirmation, conditional uncertainty and explicit claim limits. The project is an evaluation contribution and a reproducible empirical case, not a claim of a new superior selector.</p>
+<h3 id="author-responsibility-and-ai-disclosure">Author responsibility and AI disclosure</h3>
+<p>AI-assisted development tools, including ChatGPT and Codex, were used for code drafting, debugging, documentation, consistency checks, and workflow support. The research question, experimental design, evaluation protocol, scientific decisions, interpretation of results, release decisions, and final verification were directed and reviewed by the author, Lekang Sun.</p>
+<p>Single-person project by Lekang Sun; school affiliation is not an assertion of institutional endorsement or ownership. <a href="../docs/AUTHORSHIP_AND_AI_DISCLOSURE.md">Recorded authorship and code statement</a>.</p>
+<h3 id="tools-and-attribution">Tools and attribution</h3>
+<p><a href="../THIRD_PARTY_NOTICES.md">Dataset citation, dependency notices and AI-assistance disclosure</a> form part of this report. Author identity, affiliation and the AI-use declaration are recorded in this snapshot.</p>
+<h2 id="18-references-and-evidence-locators">18. References and evidence locators</h2>
+<ol>
+<li>LINCS Cell Painting public project documentation: https://github.com/broadinstitute/lincs-cell-painting . Official README and CC0 snapshots were verified during Phase20; Phase21 reuses their hashes and recorded access date.</li>
+<li><a href="../docs/DATA_CC0_REFERENCE.md">Archived phenotype license reference</a>. Scope and metadata exclusions are discussed in the <a href="../docs/DATA_AND_LICENSE.md">data boundary</a>.</li>
+<li><a href="../configs/frozen_method.json">Frozen method/configuration</a>, <a href="../configs/preprocessing.json">preprocessing</a>, <a href="../configs/reference.json">reference</a>, and archived <a href="../src/">source</a>.</li>
+<li><a href="../results/development/comparison_aggregate.csv">Development aggregates</a>, <a href="../results/negative_results/phase15_secondary_metrics.csv">Phase15 secondary metrics</a>, and <a href="../results/negative_results/phase15_summary_by_seed.csv">per-seed negative evidence</a>.</li>
+<li><a href="../results/confirmation/run_manifest.json">Formal run manifest</a>, <a href="../results/confirmation/final_adjudication.json">adjudication</a>, <a href="../results/confirmation/summary_metrics.csv">saved summaries</a>, <a href="../results/confirmation/bootstrap_ci.csv">bootstrap estimates</a>.</li>
+<li><a href="../results/audit/overlap_matrix.csv">Identity overlap matrix</a> and <a href="../results/audit/adjudication.json">independence adjudication</a>.</li>
+<li><a href="../reproducibility/README.md">Reproducibility instructions</a>, <a href="../reproducibility/artifact_index.json">artifact index</a>, and <a href="../docs/final_claim_evidence_matrix.csv">claim-evidence matrix</a>.</li>
+</ol></body></html>

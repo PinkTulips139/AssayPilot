@@ -1,0 +1,17 @@
+# Public Snapshot Inventory
+
+This inventory describes the intended public competition snapshot. `RIGHTS_NOTICE.md` governs user-original project material; no additional open-source license is granted. Third-party materials keep their upstream terms.
+
+| Category | Paths / assets | Origin and rights treatment | Redistribution / attribution |
+| --- | --- | --- | --- |
+| User-original project code | `src/`, `demo/app.js`, `demo/index.html`, `reproducibility/*.py` | Led by Lekang Sun with disclosed ChatGPT/Codex assistance. No known undisclosed substantial copied code was identified in the recorded author statement. | Included under the Rights Notice; no additional open-source license. Do not infer MIT, Apache, GPL or another license. |
+| Project documentation | `README.md`, `REPORT/`, `docs/AUTHORSHIP_AND_AI_DISCLOSURE.md`, `docs/CLAIM_SCOPE.md` | User-authored competition materials with AI assistance disclosed. | Included under the Rights Notice and applicable competition terms. |
+| Frozen configuration and manifests | `configs/` | Project-produced contract derived from the documented LINCS phenotype workflow. Contains assay identifiers and parameters, not molecular structure/MOA/target annotations. | Included for reproducibility; cite LINCS Cell Painting. No raw data redistributed. |
+| Saved aggregate/per-seed evidence | `results/` | Project-produced results derived from the documented LINCS Cell Painting data and frozen evaluation. Historical internal audits and private workspace artifacts are excluded. | Included for report/figure verification with LINCS attribution. No raw profiles or restricted annotations. |
+| Figures and tables | `figures/`, `tables/` | Project-generated presentation of saved results. Underlying upstream README assigns data/results/figures to CC0 1.0; figure glyphs use DejaVu Sans. | Included with LINCS attribution and the retained DejaVu notice. No raw images or font binary. |
+| Demo replay data | `demo/data.js` | Project-generated replay payload from saved selection/evaluation outputs. Contains experimental condition identifiers and aggregates; no raw phenotype vectors. | Included to demonstrate the submitted workflow; cite LINCS Cell Painting. |
+| Dependency declarations | `reproducibility/requirements_packaging.txt`, `reproducibility/packaging_environment.json` | References NumPy, pandas, scikit-learn, SciPy, Matplotlib and Python-Markdown. Dependency source code is not vendored. | Install separately under each dependency's upstream license; see `THIRD_PARTY_NOTICES.md`. |
+| LINCS Cell Painting references | `docs/DATA_CC0_REFERENCE.md`, `docs/DATA_AND_LICENSE.md` | Third-party dataset and license evidence. Upstream repository code is BSD 3-Clause; upstream data/results/figures are stated as CC0 1.0. | Attribution retained. Raw profiles/images and restricted CLUE structure/fingerprint/MOA/target annotations are not redistributed. |
+| Font notice | `docs/FONT_LICENSE_DEJAVU.txt` | Third-party notice for DejaVu/Bitstream glyphs used in generated figures. | Notice retained; font binary is not included. |
+
+Excluded categories include raw augmented phenotype profiles, microscopy images, molecular structures, fingerprints, MOA/target annotations, model checkpoints, cache, temporary files, registration materials, emails/private correspondence, private provenance, internal phase audits, unpublished alternative versions and future research assets.

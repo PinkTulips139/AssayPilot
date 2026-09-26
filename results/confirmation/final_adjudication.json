@@ -1,0 +1,84 @@
+{
+  "decision": "C — COVERAGE_ONLY_NOT_CONFIRMED",
+  "coverage_only_campaign_leader": {
+    "T1": false,
+    "T2": false
+  },
+  "complete": true,
+  "primary_means": {
+    "T1": {
+      "coverage-only": 0.6901785714285715,
+      "diversity": 0.85625,
+      "greedy": 0.8151785714285713,
+      "random": 0.37767857142857136,
+      "uncertainty": 0.8080357142857142
+    },
+    "T2": {
+      "coverage-only": 0.8891666666666665,
+      "diversity": 0.9208333333333334,
+      "greedy": 0.9166666666666664,
+      "random": 0.38666666666666666,
+      "uncertainty": 0.9274999999999997
+    }
+  },
+  "paired_bootstrap": [
+    {
+      "campaign": "T1",
+      "comparator": "uncertainty",
+      "valid_pairs": 20,
+      "planned_pairs": 20,
+      "mean": -0.11785714285714288,
+      "median": -0.12797619047619052,
+      "std": 0.05869091465823696,
+      "ci_low": -0.14166666666666666,
+      "ci_high": -0.09255952380952381,
+      "wins": 1,
+      "ties": 0,
+      "losses": 19
+    },
+    {
+      "campaign": "T1",
+      "comparator": "diversity",
+      "valid_pairs": 20,
+      "planned_pairs": 20,
+      "mean": -0.16607142857142862,
+      "median": -0.16369047619047622,
+      "std": 0.043092330175088484,
+      "ci_low": -0.1848214285714286,
+      "ci_high": -0.14821428571428577,
+      "wins": 0,
+      "ties": 0,
+      "losses": 20
+    },
+    {
+      "campaign": "T2",
+      "comparator": "uncertainty",
+      "valid_pairs": 20,
+      "planned_pairs": 20,
+      "mean": -0.03833333333333326,
+      "median": 0.016666666666666607,
+      "std": 0.08269050307166842,
+      "ci_low": -0.07416666666666658,
+      "ci_high": -0.0033333333333332936,
+      "wins": 12,
+      "ties": 2,
+      "losses": 6
+    },
+    {
+      "campaign": "T2",
+      "comparator": "diversity",
+      "valid_pairs": 20,
+      "planned_pairs": 20,
+      "mean": -0.03166666666666663,
+      "median": 0.016666666666666607,
+      "std": 0.08526703839267144,
+      "ci_low": -0.06834374999999998,
+      "ci_high": 0.002500000000000052,
+      "wins": 11,
+      "ties": 2,
+      "losses": 7
+    }
+  ],
+  "ci_scope": "conditional initial-seed uncertainty on fixed entities and plates, not biological/batch/population CI",
+  "adjudication_manifest_sha256": "dee6e0cc233d789db316964e5416c9cf8bb55d4802dd2e8f3a368badc2be4983"
+}

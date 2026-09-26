@@ -1,0 +1,79 @@
+{
+  "utc": "2026-09-19T12:13:28.826545+00:00",
+  "campaigns": [
+    "T1",
+    "T2"
+  ],
+  "methods": [
+    "random",
+    "greedy",
+    "uncertainty",
+    "diversity",
+    "coverage-only"
+  ],
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ],
+  "planned_runs": 200,
+  "conditions_per_campaign": 300,
+  "compounds_per_campaign": 50,
+  "initial": 12,
+  "rounds": 12,
+  "queries_per_round": 4,
+  "budget": 60,
+  "max_doses_per_compound": 2,
+  "reference_cost": 96,
+  "coverage_only_weights": [
+    1,
+    0,
+    0,
+    0
+  ],
+  "frozen_fingerprint": "009d78b97ac2d1d47986fd13e3f5592c01c8e0b0e09ab9063d20cfe6a364bda7",
+  "history": "Phase12 development + development_extension only; no smoke or T pooled fitting",
+  "preprocessing": "frozen Phase12 preprocessing/reference and Phase13 FrozenTransform",
+  "uncertainty_implementation": "frozen CachedUncertainty (exact caching, Phase13 tested)",
+  "primary": "trapezoid coverage budget12..60 /48",
+  "secondary": [
+    "final_coverage",
+    "discovery_efficiency",
+    "diversity",
+    "repeatability",
+    "cross_batch_agreement",
+    "cross_batch_median_cosine"
+  ],
+  "bootstrap": {
+    "resamples": 10000,
+    "rng_seed": 1600,
+    "statistic": "paired difference mean",
+    "percentiles": [
+      2.5,
+      97.5
+    ],
+    "unit": "20 paired seeds within each fixed campaign",
+    "reset_rng_per_comparison": true
+  },
+  "no_outcome_stopping": true,
+  "H_access": "after all 200 selection trajectories attempted and sealed; no metrics before global lock",
+  "failure_handling": "retain every planned row and failed attempt; NA never zero; no complete confirmation adjudication if primary missing",
+  "cross_batch": "original batch2 pair mean vs single batch1 matched profile; no refit; source selected by original barcode metadata, not outcomes"
+}

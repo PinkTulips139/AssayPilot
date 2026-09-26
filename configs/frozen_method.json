@@ -1,0 +1,96 @@
+{
+  "source_hashes": {
+    "src/__init__.py": "b8ccc392416ac835d52f66a25141c5ff2f0c851f8deccce60351e3342a6c7434",
+    "src/baselines/selectors.py": "2393d3ec1192de0b5f9df53231a894af3d7466e68d3cae31864d9a5ba426de52",
+    "src/baselines/__init__.py": "fc533a670e0481457c8efe70bf8e3e9127ffa7dd0e26f425a6c423e892750d0b",
+    "src/data/loader.py": "f07b6f5b9ed3e3953e1d043bfac727a89f86ebc7d8e5c08fdb245e48911be6e2",
+    "src/data/preprocessing.py": "7254f34b40d0b73c95efe173755f061079d46783fc4ea3822ef682fd3e7fde17",
+    "src/data/splits.py": "f92f3ca74923e31348b513b8f5d522b3b1412fcd09d599f121b73d02b32a930d",
+    "src/data/__init__.py": "1bf7b727945727091b4bbeb781733b0140b861263bae39c4b1c294456ca8435c",
+    "src/evaluation/reference.py": "5a4b54a79f2b90ad093592c5d54fc08dbd7a6a0e03ebeaa39d1716eff5287f3e",
+    "src/evaluation/scorer.py": "70b4fc10140fbb2cbf8a2fd597cf8654cb365139e1f493715406424a9105825d",
+    "src/evaluation/__init__.py": "e58d866a48aa43f7a09eae22888d9aca151d0ed26262e37b727cb2ab388c0c17",
+    "src/qacs/ablation.py": "8f4dbe2abddf954290dbca9d772bd023a6e53b4e247ad15f80c6db293a3cb324",
+    "src/qacs/selector.py": "224d1501a562c8bc777a8ffac7c95459df6c426120c276d3f77b55d6c23c3657",
+    "src/qacs/successors.py": "750d71c966747285cb4f0b91fe7a198d6a253cce2b950ad1d01e149ea6b6c6bd",
+    "src/qacs/__init__.py": "d5c18797f0be73b31769fb9b0b37ba4b2e9e71c40ef6eb2e4aab1b13997cba79",
+    "src/simulation/environment.py": "e48c89650edd52b1c8bd4b87ef5b9eb9f27ffc0285234165e3d9fc17c00b69a4",
+    "src/simulation/__init__.py": "b3abad9f4ea16f8b769de6db6aedaadc116fb579475dce1fc89d7044b6ef7384",
+    "experiments/phase13.py": "b3a0a9474231725621e041a355e4d78822609ebb8e45762379bd22bcfacc2b90",
+    "data/phase12/preprocessing.json": "49a66435f965ed785edaa035e607c7979287c17794d72f04bec1650990633462",
+    "data/phase12/reference.json": "918e2e243e8c530d30a656a26e65a7704f0940d80a4afb5d1f6af3fb59f5b2de",
+    "data/phase12/assignment.csv": "14c25a36e663f5e128c71c04a3a64d5ead38cc3bff96913fd01b6287672c41e3",
+    "data/phase12/roles.csv": "6af996d1c89a34c684378e26043f7e3e8f6493c9868b1cbe6f97b6be794aa41e",
+    "data/split_manifest.csv": "52e61d9c7136907226776cfe69895004890234916f5617492c71a4010392b45a",
+    "data/role_manifest.csv": "c1c6f22b19d99cc58d2f62257f8843833df3f131351a7fb31252b464a3f048d7"
+  },
+  "config": {
+    "method": "AblationQACS variant QACS-coverage-only",
+    "weights": [
+      1,
+      0,
+      0,
+      0
+    ],
+    "algorithm_changed": false,
+    "seeds": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19
+    ],
+    "initial_conditions": 12,
+    "rounds": 12,
+    "queries_per_round": 4,
+    "confirmation_budget": 60,
+    "max_doses_per_compound": 2,
+    "reference_cost": 96,
+    "history": "data/phase12 development and development_extension only",
+    "pool": "existing T1 and T2 unchanged; not opened",
+    "baselines": [
+      "random",
+      "greedy",
+      "uncertainty",
+      "diversity"
+    ],
+    "coverage_auc": "trapezoid coverage over confirmation budget 12..60 /48",
+    "coverage": "selected H regions / available H regions; zero denominator NA",
+    "diversity": "H supported-region entropy /log(8)",
+    "repeatability": "H confirmed among online positives; zero denominator NA",
+    "discovery_efficiency": "(regions60-regions12)/48",
+    "cross_batch": "original batch2 online pair mean vs batch1 single profile; no refit",
+    "bootstrap": {
+      "resamples": 10000,
+      "rng_seed": 1600,
+      "unit": "paired seed within each fixed campaign; 20 seeds; percentile 2.5/97.5 of mean difference",
+      "limitations": "conditional on fixed entities and plates; not biological or cross-batch generalization CI",
+      "comparators": [
+        "uncertainty",
+        "diversity"
+      ]
+    },
+    "gate": "cross-ID leakage-relevant equivalence/near-duplicate exclusion must be evidenced before outcomes are opened",
+    "runtime": {
+      "python": "3.13.9",
+      "numpy": "2.3.5",
+      "pandas": "2.3.3"
+    }
+  },
+  "fingerprint_sha256": "009d78b97ac2d1d47986fd13e3f5592c01c8e0b0e09ab9063d20cfe6a364bda7"
+}

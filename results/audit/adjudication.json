@@ -1,0 +1,19 @@
+{
+  "gate": "B",
+  "name": "FIXED_CONFIRMATION_SET_PARTIALLY_INDEPENDENT",
+  "entity_scope": "registered experimental treatment/sample and measurement ancestry; not chemical/scaffold novelty",
+  "observed_identity_leakage": false,
+  "entity_registered": "PASS",
+  "chemical_equivalence": "UNKNOWN",
+  "plate_vs_development": "PASS",
+  "plate_T1_vs_T2": "FAIL",
+  "batch_vs_development": "FAIL",
+  "external_domain": "N/A",
+  "historical_method_status": "METHOD_NOT_CONFIRMED_BECAUSE_CONFIRMATION_NOT_RUN",
+  "reopen_performance": "ONLY for registered-entity and development-unseen-plate claim; not strict chemical-near-duplicate or batch-independent claim",
+  "next_stage": "PHASE16_FIXED_T1_T2_CLAIM_SCOPED_PERFORMANCE_CONFIRMATION",
+  "confirmation_performance_viewed": false,
+  "split_changed": false,
+  "trained": false,
+  "gpu": false
+}

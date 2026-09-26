@@ -1,0 +1,17 @@
+method,reference,mean_delta,wins,ties,losses
+QACS-coverage-only,QACS-full,0.038888888888888896,19,1,0
+QACS-coverage-only,uncertainty,0.022222222222222216,18,0,2
+QACS-full,QACS-full,0.0,0,20,0
+QACS-full,uncertainty,-0.01666666666666668,4,8,8
+QACS-no-batch,QACS-full,0.027083333333333348,17,3,0
+QACS-no-batch,uncertainty,0.010416666666666668,18,0,2
+QACS-no-repeatability,QACS-full,-0.017361111111111098,1,3,16
+QACS-no-repeatability,uncertainty,-0.03402777777777778,2,0,18
+diversity,QACS-full,0.004861111111111099,10,5,5
+diversity,uncertainty,-0.01180555555555558,8,6,6
+greedy,QACS-full,-0.0020833333333334036,6,8,6
+greedy,uncertainty,-0.018750000000000083,5,6,9
+random,QACS-full,-0.47395833333333337,0,0,20
+random,uncertainty,-0.490625,0,0,20
+uncertainty,QACS-full,0.01666666666666668,8,8,4
+uncertainty,uncertainty,0.0,0,20,0

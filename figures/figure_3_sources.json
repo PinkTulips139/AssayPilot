@@ -1,0 +1,27 @@
+{
+  "inputs": [
+    {
+      "path": "results/development/comparison_aggregate.csv",
+      "sha256": "4630749793fc80aec75305020ad2e0028847cab417dbea54d4abd795b42e7c0a"
+    },
+    {
+      "path": "results/confirmation/summary_metrics.csv",
+      "sha256": "ad208431bedd7c74df5a4e7f6049fca3016c92c9c32ce3b01cb628bc31791bff"
+    }
+  ],
+  "fields": [
+    "coverage_auc mean"
+  ],
+  "statistics": "saved estimates/SD/CI; no new bootstrap",
+  "performance_recomputed": false,
+  "formatting_only": true,
+  "display_derivations": [
+    "descending rank of saved means within each dataset"
+  ],
+  "claims": [
+    "C01",
+    "C02",
+    "C03"
+  ],
+  "renderer_sha256": "6b416c2e92626c25a86698c471bfc8430107e362ea158f5f92a48db207151299"
+}

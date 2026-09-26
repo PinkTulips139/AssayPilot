@@ -1,0 +1,10 @@
+| Method | AUC | Seed_SD | Seeds |
+| --- | --- | --- | --- |
+| Random | 0.40521 | 0.19047 | 20 |
+| Greedy | 0.87708 | 0.06244 | 20 |
+| Uncertainty-only | 0.89583 | 0.02137 | 20 |
+| Diversity-only | 0.88403 | 0.06146 | 20 |
+| Coverage-only | 0.91806 | 0.05947 | 20 |
+| QACS-full | 0.87917 | 0.06176 | 20 |
+| QACS-no-repeatability | 0.86181 | 0.05914 | 20 |
+| QACS-no-batch | 0.90625 | 0.05989 | 20 |

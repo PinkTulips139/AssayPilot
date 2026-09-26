@@ -1,0 +1,29 @@
+{
+  "inputs": [
+    {
+      "path": "results/audit/overlap_matrix.csv",
+      "sha256": "584efe9a852dbe10f486f8d61e5cad243c38b66a6a75cc7ba3d847f374a8f29a"
+    },
+    {
+      "path": "results/audit/adjudication.json",
+      "sha256": "02baae0d8055592b5f1ac561a5352b3199c17dbdd61513265677721ae0b67fdc"
+    }
+  ],
+  "fields": [
+    "identity",
+    "intersection",
+    "claim statuses"
+  ],
+  "statistics": "saved estimates/SD/CI; no new bootstrap",
+  "performance_recomputed": false,
+  "formatting_only": true,
+  "display_derivations": [
+    "layout of inherited claim statuses; no outcome inference"
+  ],
+  "claims": [
+    "C04",
+    "C05",
+    "C06"
+  ],
+  "renderer_sha256": "6b416c2e92626c25a86698c471bfc8430107e362ea158f5f92a48db207151299"
+}

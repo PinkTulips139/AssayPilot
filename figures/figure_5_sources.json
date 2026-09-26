@@ -1,0 +1,30 @@
+{
+  "inputs": [
+    {
+      "path": "results/confirmation/summary_metrics.csv",
+      "sha256": "ad208431bedd7c74df5a4e7f6049fca3016c92c9c32ce3b01cb628bc31791bff"
+    },
+    {
+      "path": "results/confirmation/summary_by_seed.csv",
+      "sha256": "0d8aad5c60defa0e481c2b3cc5587bab9de0b5761e157ceff7c4b717b877a22a"
+    }
+  ],
+  "fields": [
+    "coverage_auc",
+    "final_coverage",
+    "diversity",
+    "repeatability",
+    "cross_batch_agreement",
+    "cross_batch_median_cosine",
+    "online_positive",
+    "repeat_confirmed"
+  ],
+  "statistics": "saved estimates/SD/CI; no new bootstrap",
+  "performance_recomputed": false,
+  "formatting_only": true,
+  "display_derivations": [],
+  "claims": [
+    "C08"
+  ],
+  "renderer_sha256": "6b416c2e92626c25a86698c471bfc8430107e362ea158f5f92a48db207151299"
+}

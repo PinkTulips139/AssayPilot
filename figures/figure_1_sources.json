@@ -1,0 +1,28 @@
+{
+  "inputs": [
+    {
+      "path": "results/confirmation/run_manifest.json",
+      "sha256": "7e6e19be64308f13bf1abd8fba27d1341127c60e79c420b4b770a527aaa43d52"
+    },
+    {
+      "path": "results/confirmation/all_trajectories_locked.json",
+      "sha256": "6513f9e8914fc2e1c73080f1fe4f2799d1165599582bab1e664d979e23d19cc1"
+    }
+  ],
+  "fields": [
+    "initial",
+    "rounds",
+    "budget",
+    "reference_cost",
+    "planned"
+  ],
+  "statistics": "saved estimates/SD/CI; no new bootstrap",
+  "performance_recomputed": false,
+  "formatting_only": true,
+  "display_derivations": [],
+  "claims": [
+    "C10",
+    "C11"
+  ],
+  "renderer_sha256": "6b416c2e92626c25a86698c471bfc8430107e362ea158f5f92a48db207151299"
+}

@@ -1,0 +1,14 @@
+{
+  "utc": "2026-09-19T12:18:24.614078+00:00",
+  "planned_runs": 200,
+  "selection_receipts": 200,
+  "completed_runs": 200,
+  "old_files_unchanged": 626,
+  "frozen_sources_unchanged": true,
+  "manifests_unchanged": true,
+  "formal_H_opened_after_global_trajectory_lock": true,
+  "failure_entries": 0,
+  "gpu": false,
+  "training": false,
+  "new_download_bytes": 4069749
+}

@@ -1,0 +1,29 @@
+{
+  "inputs": [
+    {
+      "path": "results/confirmation/paired_differences.csv",
+      "sha256": "abf6184a1abc5b280c660fd68fa90c0f29d6e07906639d74958958e245d87652"
+    },
+    {
+      "path": "results/confirmation/bootstrap_ci.csv",
+      "sha256": "f67ed031058e647c0eea2ff39da8e9520573fc4cc0501fda04066bfdf4f3200b"
+    }
+  ],
+  "fields": [
+    "difference",
+    "mean",
+    "ci_low",
+    "ci_high",
+    "valid_pairs"
+  ],
+  "statistics": "saved estimates/SD/CI; no new bootstrap",
+  "performance_recomputed": false,
+  "formatting_only": true,
+  "display_derivations": [
+    "fixed vertical jitter only"
+  ],
+  "claims": [
+    "C09"
+  ],
+  "renderer_sha256": "6b416c2e92626c25a86698c471bfc8430107e362ea158f5f92a48db207151299"
+}

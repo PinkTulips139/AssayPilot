@@ -1,0 +1,10 @@
+{
+  "receipts_valid": 200,
+  "same_initial_per_seed": true,
+  "candidate_pool_exact": true,
+  "budget60": true,
+  "rounds12x4": true,
+  "max_doses2": true,
+  "no_duplicate_queries": true,
+  "raw_receipt_hashes_match": true
+}
